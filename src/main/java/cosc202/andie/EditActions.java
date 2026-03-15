@@ -39,6 +39,7 @@ public class EditActions {
         actions = new ArrayList<>();
         actions.add(new UndoAction("Undo", null, "Undo", KeyEvent.VK_Z));
         actions.add(new RedoAction("Redo", null, "Redo", KeyEvent.VK_Y));
+        actions.add(new HorizontalFlipAction("Flip - Horizontal", null, "Flip Imagine Hoizontally", KeyEvent.VK_H));
     }
 
     /**
@@ -141,6 +142,20 @@ public class EditActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             target.getImage().redo();
+            target.repaint();
+            target.getParent().revalidate();
+        }
+    }
+
+    public class HorizontalFlipAction extends ImageAction {
+
+        HorizontalFlipAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().apply(new HorizontalFlip());
             target.repaint();
             target.getParent().revalidate();
         }
