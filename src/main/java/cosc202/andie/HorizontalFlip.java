@@ -29,6 +29,7 @@ public class HorizontalFlip implements ImageOperation, java.io.Serializable {
         AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         BufferedImage output = op.filter(input, null);
 
+        
         return output;
     }
 }
