@@ -1,6 +1,7 @@
 package cosc202.andie;
 
 import static cosc202.andie.ImageAction.target;
+import java.awt.Toolkit;
 import java.util.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -25,6 +26,7 @@ import javax.swing.*;
  * @author Steven Mills
  * @version 1.0
  */
+
 public class EditActions {
 
     /**
@@ -32,6 +34,7 @@ public class EditActions {
      * proper language
      */
     private static ResourceBundle bundle = LanguageUtil.getBundle();
+    public int shortcut = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
     /**
      * A list of actions for the Edit menu.
@@ -45,7 +48,6 @@ public class EditActions {
      */
     public EditActions() {
         actions = new ArrayList<>();
-
         actions.add(new UndoAction(bundle.getString("UNDO"), null, bundle.getString("UNDO"), KeyEvent.VK_Z));
         actions.add(new RedoAction(bundle.getString("REDO"), null, bundle.getString("REDO"), KeyEvent.VK_Y));
         actions.add(new ResizeAction(bundle.getString("RESIZE"), null, bundle.getString("RESIZE"), KeyEvent.VK_X));
@@ -93,6 +95,8 @@ public class EditActions {
          */
         ResizeAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_R, shortcut));
+
         }
 
         /**
@@ -166,6 +170,8 @@ public class EditActions {
          */
         UndoAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_Z, shortcut));
+
         }
 
         /**
@@ -213,6 +219,7 @@ public class EditActions {
          */
         RedoAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_Z, shortcut | InputEvent.SHIFT_DOWN_MASK));
         }
 
         /**
@@ -261,6 +268,7 @@ public class EditActions {
          */
         HorizontalFlipAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_F, shortcut));
         }
 
         /**
@@ -308,6 +316,7 @@ public class EditActions {
          */
         VerticalFlipAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_F, shortcut | InputEvent.SHIFT_DOWN_MASK));
         }
 
         /**

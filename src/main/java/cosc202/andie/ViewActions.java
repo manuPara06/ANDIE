@@ -2,6 +2,7 @@ package cosc202.andie;
 
 import static cosc202.andie.EditActions.imageCheck;
 import static cosc202.andie.ImageAction.target;
+import java.awt.Toolkit;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -29,6 +30,8 @@ public class ViewActions {
 
     /** A @ResourceBundle that retrieves strings throughout the class in the proper language */
     private static ResourceBundle bundle = LanguageUtil.getBundle();
+    public int shortcut = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+
 
     /**
      * A list of actions for the View menu.
@@ -89,6 +92,7 @@ public class ViewActions {
          */
         ZoomInAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, shortcut | InputEvent.SHIFT_DOWN_MASK));
         }
 
         /**
@@ -140,6 +144,7 @@ public class ViewActions {
          */
         ZoomOutAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, shortcut | InputEvent.SHIFT_DOWN_MASK));
         }
 
         /**
@@ -191,6 +196,8 @@ public class ViewActions {
          */
         ZoomFullAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_0, shortcut | InputEvent.SHIFT_DOWN_MASK));
+
         }
 
         /**

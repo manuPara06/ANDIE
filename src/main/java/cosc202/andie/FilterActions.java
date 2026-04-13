@@ -3,6 +3,7 @@ package cosc202.andie;
 import static cosc202.andie.EditActions.imageCheck;
 import static cosc202.andie.ImageAction.target;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -28,8 +29,12 @@ import javax.swing.*;
  */
 public class FilterActions {
 
-    /** A @ResourceBundle that retrieves strings throughout the class in the proper language */
+    /**
+     * A @ResourceBundle that retrieves strings throughout the class in the
+     * proper language
+     */
     private static ResourceBundle bundle = LanguageUtil.getBundle();
+    public int shortcut = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
     /**
      * A list of actions for the Filter menu.
@@ -43,57 +48,12 @@ public class FilterActions {
      */
     public FilterActions() {
         actions = new ArrayList<>();
-
         actions.add(new MeanFilterAction(bundle.getString("MEAN FILTER"), null, bundle.getString("APPLY A MEAN FILTER"), KeyEvent.VK_M));
         actions.add(new SharpenAction(bundle.getString("SHARPEN FILTER"), null, bundle.getString("APPLY A SHARPEN FILTER"), KeyEvent.VK_S));
         actions.add(new MedianFilterAction(bundle.getString("MEDIAN FILTER"), null, bundle.getString("APPLY A MEDIAN FILTER"), KeyEvent.VK_D));
         actions.add(new GaussianFilterAction(bundle.getString("GAUSSIAN FILTER"), null, bundle.getString("APPLY A GAUSSIAN BLUR FILTER"), KeyEvent.VK_G));
 
-        
     }
-    /**
-     * <p>
-     * Action to blur an image with a median filter.
-     * </p>
-     *
-     * @see MedianFilter
-     */
-     public class MedianFilterAction extends ImageAction {
-         /**
-         * <p>
-         * Create a new median filter action.
-         * </p>
-         *
-         * @param name The name of the action (ignored if null).
-         * @param icon An icon to use to represent the action (ignored if null).
-         * @param desc A brief description of the action (ignored if null).
-         * @param mnemonic A mnemonic key to use as a shortcut (ignored if
-         * null).
-         */
-            MedianFilterAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
-                super(name, icon, desc, mnemonic);
-            }
-            /**
-         * <p>
-         * Callback for when the median filter action is triggered.
-         * </p>
-         *
-         * <p>
-         * This method is called whenever the MedianFilterAction is triggered. It applies 
-         * the median filter to the entire image {@link MedianFilter}.
-         * </p>
-         *
-         * @param e The event triggering this callback.
-         */
-            public void actionPerformed(ActionEvent e) {
-                if(!imageCheck()){
-                return;
-            }
-                target.getImage().apply(new MedianFilter());
-                target.repaint();
-                target.getParent().revalidate();
-            }
-        }
 
     /**
      * <p>
@@ -120,6 +80,7 @@ public class FilterActions {
      * @see MeanFilter
      */
     public class MeanFilterAction extends ImageAction {
+
         /**
          * <p>
          * Create a new mean filter action.
@@ -133,7 +94,10 @@ public class FilterActions {
          */
         MeanFilterAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, shortcut | InputEvent.SHIFT_DOWN_MASK));
+
         }
+
         /**
          * <p>
          * Callback for when the mean filter action is triggered.
@@ -149,7 +113,7 @@ public class FilterActions {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(!imageCheck()){
+            if (!imageCheck()) {
                 return;
             }
             // Determine the radius - ask the user.
@@ -158,12 +122,11 @@ public class FilterActions {
             // Pop-up dialog box to ask for the radius value.
             SpinnerNumberModel radiusModel = new SpinnerNumberModel(1, 1, 10, 1);
             JSpinner radiusSpinner = new JSpinner(radiusModel);
-            
+
             //disable typing
             JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) radiusSpinner.getEditor();
             editor.getTextField().setEditable(false);
-            
-            
+
             int option = JOptionPane.showOptionDialog(null, radiusSpinner, bundle.getString("ENTER FILTER RADIUS"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
             // Check the return value from the dialog box.
@@ -180,7 +143,7 @@ public class FilterActions {
         }
 
     }
-    
+
     /**
      * <p>
      * ImageAction to sharpen an image.
@@ -189,6 +152,7 @@ public class FilterActions {
      * @see SharpenFilter
      */
     public class SharpenAction extends ImageAction {
+
         /**
          * <p>
          * Create a new sharpen action.
@@ -200,24 +164,27 @@ public class FilterActions {
          * @param mnemonic A mnemonic key to use as a shortcut (ignored if
          * null).
          */
-        SharpenAction(String name,ImageIcon icon, String desc, Integer mnemonic){
+        SharpenAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, shortcut | InputEvent.SHIFT_DOWN_MASK));
+
         }
+
         /**
          * <p>
          * Callback for when the sharpen filter action is triggered.
          * </p>
          *
          * <p>
-         * This method is called whenever the SharpenFilterAction is triggered. It
-         * sharpens the pixels in an image {@link SharpenFilter}.
+         * This method is called whenever the SharpenFilterAction is triggered.
+         * It sharpens the pixels in an image {@link SharpenFilter}.
          * </p>
          *
          * @param e The event triggering this callback.
          */
         @Override
-        public void actionPerformed(ActionEvent e){
-            if(!imageCheck()){
+        public void actionPerformed(ActionEvent e) {
+            if (!imageCheck()) {
                 return;
             }
             target.getImage().apply(new SharpenFilter());
@@ -225,7 +192,56 @@ public class FilterActions {
             target.getParent().revalidate();
         }
     }
-    
+
+    /**
+     * <p>
+     * Action to blur an image with a median filter.
+     * </p>
+     *
+     * @see MedianFilter
+     */
+    public class MedianFilterAction extends ImageAction {
+
+        /**
+         * <p>
+         * Create a new median filter action.
+         * </p>
+         *
+         * @param name The name of the action (ignored if null).
+         * @param icon An icon to use to represent the action (ignored if null).
+         * @param desc A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if
+         * null).
+         */
+        MedianFilterAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, shortcut | InputEvent.SHIFT_DOWN_MASK));
+        }
+
+        /**
+         * <p>
+         * Callback for when the median filter action is triggered.
+         * </p>
+         *
+         * <p>
+         * This method is called whenever the MedianFilterAction is triggered.
+         * It applies the median filter to the entire image
+         * {@link MedianFilter}.
+         * </p>
+         *
+         * @param e The event triggering this callback.
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (!imageCheck()) {
+                return;
+            }
+            target.getImage().apply(new MedianFilter());
+            target.repaint();
+            target.getParent().revalidate();
+        }
+    }
+
     /**
      * <p>
      * ImageAction to blur an image with a gaussian filter.
@@ -233,7 +249,8 @@ public class FilterActions {
      *
      * @see GaussianFilter
      */
-    public class GaussianFilterAction extends ImageAction{
+    public class GaussianFilterAction extends ImageAction {
+
         /**
          * <p>
          * Create a new Gaussian Filter action.
@@ -247,23 +264,26 @@ public class FilterActions {
          */
         GaussianFilterAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_G, shortcut | InputEvent.SHIFT_DOWN_MASK));
+
         }
+
         /**
          * <p>
          * Callback for when the gaussian filter action is triggered.
          * </p>
          *
          * <p>
-         * This method is called whenever the GaussianFilterAction is triggered. It
-         * prompts the user for a filter radius, then applies an appropriately
-         * sized filter {@link GaussianFilter}.
+         * This method is called whenever the GaussianFilterAction is triggered.
+         * It prompts the user for a filter radius, then applies an
+         * appropriately sized filter {@link GaussianFilter}.
          * </p>
          *
          * @param e The event triggering this callback.
-         */   
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(!imageCheck()){
+            if (!imageCheck()) {
                 return;
             }
             // Determine the radius - ask the user.
@@ -282,7 +302,6 @@ public class FilterActions {
             panel.setPreferredSize(new Dimension(170, 50));
             int option = JOptionPane.showOptionDialog(null, radiusSpinner, bundle.getString("ENTER FILTER RADIUS"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-
             // Check the return value from the dialog box.
             if (option == JOptionPane.CANCEL_OPTION) {
                 return;
@@ -298,4 +317,3 @@ public class FilterActions {
     }
 
 }
-
