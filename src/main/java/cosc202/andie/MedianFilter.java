@@ -81,7 +81,7 @@ public class MedianFilter implements ImageOperation, java.io.Serializable {
         for (int t = 0; t < numThreads; t++) {
             final int startRow = t * rowsPerThread;
             final int endRow = (t == numThreads - 1) ? height : startRow + rowsPerThread;
-
+//this gonna make it really fast.. trusttttt 
             threads[t] = new Thread(() -> {
                 for (int y = startRow; y < endRow; y++) {
                     for (int x = 0; x < width; x++) {
